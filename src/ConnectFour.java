@@ -8,14 +8,15 @@
  */
 public class ConnectFour {
 
-  /* True for player one, alternates */
+  /* True for player one: 'X', alternates to 'Y' */
   boolean move;
   
-	/**
-	 * @param args
-	 */
-	public static void main(String[] args) {
-	  Board board = new Board();
-	}
+  
+  /**
+   * @param args
+   */
+  public static void main(String[] args) {
+    Board board = new Board();
+  }
 
 }

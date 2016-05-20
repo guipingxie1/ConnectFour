@@ -10,8 +10,43 @@
  */
 public class Board {
   
-  /* Board to hold the pieces */
-  private char[][] board = new char[6][7];
+  /* Board to hold the pieces, y-value then x-value */
+  private char[][] board;
+  
+  
+  /**
+   * Constructor for the Board class
+   * Initializes the board to all empty characters
+   */
+  public Board() {
+    board = new char[6][7];
+        
+    for (int i = 0; i < 6; ++i) {
+      for (int j = 0; j < 7; ++j)
+        board[i][j] = ' ';
+    }
+  }
+	
+  
+  /**
+   * Function to place a move onto the board
+   * 
+   * @param pos: The position the player wants to put their piece (0 - 6)
+   * @param player: The player, X or Y
+   * @return boolean to indicate if the player won or not
+   */
+  public boolean placePiece(int pos, char player) {
+    int idx = 0;
+    for (int i = 5; i >= 0; --i) {
+      if (board[i][pos] == ' ') {
+        idx = i;
+        board[i][pos] = player;
+        break;    
+      }  
+    }
+    
+    checkWin(pos, idx, player);
+  }
 
   
   /**
@@ -20,44 +55,92 @@ public class Board {
    *
    * @param pos: The position the player put their piece (0 - 6), x-value
    * @param idx: The index the player put their piece (0-5), y-value
-   * @param player: The player, true is player one
+   * @param player: The player, X or Y
+   * @return boolean to indicate if the player won or not
    */
-  private static void checkWin(int pos, int idx, boolean player) {
+  private boolean checkWin(int pos, int idx, char player) {
+    if (checkHoriz(pos, idx, player)) {
+      return true;
+    }
     
+    if (checkVert(pos, idx, player)) {
+      return true;
+    }
     
+    if (checkDiag(pos, idx, player)) {
+      return true;
+    }
+    
+    return false;
   }
   
+  
   /**
-   * Constructor for the Board class
-   * Initializes the board to all empty characters
+   * Function to check whether a player has won or not
+   * Position and player passed in so we do not have to check everything
+   * Helper for checkWin, checks the horizontal direction
+   *
+   * @param pos: The position the player put their piece (0 - 6), x-value
+   * @param idx: The index the player put their piece (0-5), y-value
+   * @param player: The player, X or Y
+   * @return boolean to indicate if the player won or not
    */
-  public Board() {
-    for (int i = 0; i < 6; ++i) {
-      for (int j = 0; j < 7; ++j)
-        board[i][j] = ' ';
-    }
-  }
-	
-  /**
-   * Function to place a move onto the board
-   * 
-   * @param pos: The position the player wants to put their piece (0 - 6)
-   * @param player: The player, true is player one
-   */
-  public void placePiece(int pos, boolean player) {
-    int idx = 0;
-    for (int i = 5; i >= 0; --i) {
-      if (board[i][pos] == ' ') {
-        idx = i;
-        if (player)
-          board[i][pos] = 'X';
-        else board[i][pos] = 'Y'; 
-        
-        break;    
-      }  
+  private boolean checkHoriz(int pos, int idx, char player) {
+    int start = Math.max(0, pos - 4);
+    while (start != 4) {
+      int count = 0;
+      for (int i = 0; i < 4; ++i) {
+        if (board[idx][i + start] == player)
+          ++count;
+      }
+      
+      if (count == 4)
+        return true;
+      
+      ++start;
     }
     
-    checkWin(pos, idx, player);
+    return false;
   }
 
+  
+  /**
+   * Function to check whether a player has won or not
+   * Position and player passed in so we do not have to check everything
+   * Helper for checkWin, checks the vertical direction
+   *
+   * @param pos: The position the player put their piece (0 - 6), x-value
+   * @param idx: The index the player put their piece (0-5), y-value
+   * @param player: The player, X or Y
+   * @return boolean to indicate if the player won or not
+   */
+  private boolean checkVert(int pos, int idx, char player) {
+    if (idx > 2) {
+      int start = idx - 3;
+      for (int i = 0; i < 4; ++i) {
+        if (board[i + start][pos] != player)
+          return false;
+      }
+      
+      return true;
+    }
+    
+    return false;
+  }
+  
+  
+  /**
+   * Function to check whether a player has won or not
+   * Position and player passed in so we do not have to check everything
+   * Helper for checkWin, checks the diagonal directions
+   *
+   * @param pos: The position the player put their piece (0 - 6), x-value
+   * @param idx: The index the player put their piece (0-5), y-value
+   * @param player: The player, X or Y
+   * @return boolean to indicate if the player won or not
+   */
+  private boolean checkDiag(int pos, int idx, char player) {
+    
+    return false;
+  }
 }

@@ -14,6 +14,7 @@ import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.MatteBorder;
 
@@ -28,6 +29,8 @@ public class Interface {
   private static final int GRID_WIDTH = 1;
   private static final int SQUARE_SIZE = 100;
   private static final int BUTTON_SIZE = 50;
+  private static final int PIECE_SIZE = 25;
+  private static final int OFFSET = 16;
   
   /* Interface Objects */
   private JFrame frame;
@@ -37,24 +40,9 @@ public class Interface {
   
   private JButton[] buttonPanels;
   private JPanel[][] boardPanels;
+  private JPanel[][] piecePanels;
 
   
-  /**
-   * Launch the application
-   */
-  public static void main(String[] args) {
-    EventQueue.invokeLater(new Runnable() {
-      public void run() {
-        try {
-          Interface window = new Interface();
-          window.frame.setVisible(true);
-        } catch (Exception e) {
-          e.printStackTrace();
-        }
-      }
-    });
-  }
-
   /**
    * Create the application
    */
@@ -62,11 +50,9 @@ public class Interface {
     frame = new JFrame("Connect Four");
     
     /* Size includes the border so we have to account for it */
-    frame.setSize(BOARD_WIDTH * SQUARE_SIZE + 2 * BORDER_WIDTH, 
-        BOARD_HEIGHT * SQUARE_SIZE + 2 * BORDER_WIDTH + BUTTON_SIZE + 16);
+    frame.setSize(BOARD_WIDTH * SQUARE_SIZE + 2 * BORDER_WIDTH + OFFSET, 
+        BOARD_HEIGHT * SQUARE_SIZE + 2 * BORDER_WIDTH + BUTTON_SIZE + OFFSET);
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    
-    //frame.getContentPane().setLayout(new BorderLayout());
     
     initWindow();
     initButtons();
@@ -80,15 +66,16 @@ public class Interface {
     frame.setVisible(true);
   }
   
+  
   /**
    * Creates the main window
    */
   private void initWindow() {
     window = new JPanel();
-    window.setPreferredSize(new Dimension(BOARD_WIDTH * SQUARE_SIZE + 2 * BORDER_WIDTH, 
-        BOARD_HEIGHT * SQUARE_SIZE + 2 * BORDER_WIDTH + BUTTON_SIZE + 16));
-    window.setMinimumSize(new Dimension(BOARD_WIDTH * SQUARE_SIZE + 2 * BORDER_WIDTH, 
-        BOARD_HEIGHT * SQUARE_SIZE + 2 * BORDER_WIDTH + BUTTON_SIZE + 16));
+    window.setPreferredSize(new Dimension(BOARD_WIDTH * SQUARE_SIZE + 2 * BORDER_WIDTH + OFFSET, 
+        BOARD_HEIGHT * SQUARE_SIZE + 2 * BORDER_WIDTH + BUTTON_SIZE + OFFSET));
+    window.setMinimumSize(new Dimension(BOARD_WIDTH * SQUARE_SIZE + 2 * BORDER_WIDTH + OFFSET, 
+        BOARD_HEIGHT * SQUARE_SIZE + 2 * BORDER_WIDTH + BUTTON_SIZE + OFFSET));
     window.setBackground(Color.WHITE);
     window.setBorder(BorderFactory.createLineBorder(Color.BLACK, BORDER_WIDTH));
   }
@@ -109,11 +96,8 @@ public class Interface {
     
     for (int i = 0; i < BOARD_WIDTH; ++i) {
       buttonPanels[i] = new JButton();
-      buttonPanels[i].setLayout(new FlowLayout(0, 0, 0));
-      //buttonPanels[i].setBorder(BorderFactory.createEmptyBorder());
       buttonPanels[i].setPreferredSize(new Dimension(SQUARE_SIZE, BUTTON_SIZE));
       buttonPanels[i].setMinimumSize(new Dimension(SQUARE_SIZE, BUTTON_SIZE));
-      //buttonPanels[i].setBorder(null);
       buttonPanels[i].setOpaque(true);
       buttons.add(buttonPanels[i]);
     }
@@ -125,27 +109,76 @@ public class Interface {
    */
   private void initBoard() {
     board = new JPanel();
-    //board.setBorder(null);
     board.setPreferredSize(new Dimension(BOARD_WIDTH * SQUARE_SIZE, 
         BOARD_HEIGHT * SQUARE_SIZE));
     board.setMinimumSize(new Dimension(BOARD_WIDTH * SQUARE_SIZE, 
         BOARD_HEIGHT * SQUARE_SIZE));
     board.setBackground(Color.WHITE);
     
+    /* Initialize the arrays */
     board.setLayout(new GridLayout(BOARD_HEIGHT, BOARD_WIDTH));
-    boardPanels = new JPanel[BOARD_WIDTH][BOARD_HEIGHT];
+    boardPanels = new JPanel[BOARD_HEIGHT][BOARD_WIDTH];
+    piecePanels = new JPanel[BOARD_HEIGHT][BOARD_WIDTH];
     
-    for (int i = 0; i < BOARD_WIDTH; ++i) {
-      for (int j = 0; j < BOARD_HEIGHT; ++j) {
-        boardPanels[i][j] = new JPanel();
-        boardPanels[i][j].setLayout(new FlowLayout(0, 0, 0));
+    for (int i = 0; i < BOARD_HEIGHT; ++i) {
+      for (int j = 0; j < BOARD_WIDTH; ++j) {
+        /* Centers everything with the grid bag layout */
+        boardPanels[i][j] = new JPanel(new GridBagLayout());
         boardPanels[i][j].setPreferredSize(new Dimension(SQUARE_SIZE, SQUARE_SIZE));
         boardPanels[i][j].setMinimumSize(new Dimension(SQUARE_SIZE, SQUARE_SIZE));
         boardPanels[i][j].setBorder(BorderFactory.createLineBorder(Color.BLACK, GRID_WIDTH));
         boardPanels[i][j].setOpaque(true);
         boardPanels[i][j].setBackground(Color.WHITE);
+/*
+        JLabel label1 = new JLabel(i + " " + j);
+        boardPanels[i][j].add(label1);
+*/        
+        /* Pieces */
+        piecePanels[i][j] = new JPanel();
+        piecePanels[i][j].setPreferredSize(new Dimension(PIECE_SIZE, PIECE_SIZE));
+        piecePanels[i][j].setMinimumSize(new Dimension(PIECE_SIZE, PIECE_SIZE));
+        piecePanels[i][j].setBackground(Color.WHITE);
+        
+        boardPanels[i][j].add(piecePanels[i][j]);       
         board.add(boardPanels[i][j]);
       }
     }
+  }
+  
+  
+ 
+  /**
+   * Adds the action listener to the buttons
+   * 
+   * @param pos: The position of the button (0-6)
+   * @param a: The action listener
+   */
+  public void addButtonActionListener(int pos, ActionListener a) {
+    buttonPanels[pos].addActionListener(a);
+  }
+  
+  
+  /**
+   * Disable the buttons
+   * 
+   * @param pos: The position of the button (0-6)
+   */
+  public void disableButton(int pos) {
+    buttonPanels[pos].setEnabled(false);
+  }
+  
+  
+  /**
+   * Called when a player makes a move
+   * Changes the piecePanels array to the corresponding players color
+   * 
+   * @param pos: The position the player put their piece (0 - 6), x-value
+   * @param idx: The index the player put their piece (0-5), y-value
+   * @param player: The player, X or Y
+   */
+  public void setPiecePanel(int pos, int idx, char player) {
+    if (player == 'X')
+      piecePanels[idx][pos].setBackground(Color.BLUE);
+    else piecePanels[idx][pos].setBackground(Color.RED);   
   }
 }

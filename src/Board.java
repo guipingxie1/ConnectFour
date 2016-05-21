@@ -45,7 +45,7 @@ public class Board {
       }  
     }
     
-    /* If the player won we add 10 to the index of the piece */
+    /* If the player wins we add 10 to the index of the piece */
     if (checkWin(pos, idx, player))
       return 10 + idx;
     return idx;

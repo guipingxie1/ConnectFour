@@ -9,7 +9,7 @@
 public class ConnectFour {
 
   /* True for player one: 'X', alternates to 'Y' */
-  boolean move;
+  private boolean move;
   
   
   /**

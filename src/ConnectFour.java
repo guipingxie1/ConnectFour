@@ -1,22 +1,16 @@
 /**
+ * Runs the connect four game
  * 
- */
-
-/**
  * @author guiping
  *
  */
-public class ConnectFour {
-
-  /* True for player one: 'X', alternates to 'Y' */
-  private boolean move;
-  
+public class ConnectFour { 
   
   /**
    * @param args
    */
   public static void main(String[] args) {
-    Board board = new Board();
+    Controller game = new Controller();
   }
 
 }

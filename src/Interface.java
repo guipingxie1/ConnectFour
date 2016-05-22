@@ -1,24 +1,15 @@
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.EventQueue;
-import java.awt.FlowLayout;
-import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
-import java.awt.Insets;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.BorderFactory;
-import javax.swing.Box;
 import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
+//import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.border.MatteBorder;
 
-import org.eclipse.wb.swing.FocusTraversalOnArray;
 
 public class Interface {
   
@@ -159,12 +150,22 @@ public class Interface {
   
   
   /**
-   * Disable the buttons
+   * Disable the button at the position provided
    * 
    * @param pos: The position of the button (0-6)
    */
   public void disableButton(int pos) {
     buttonPanels[pos].setEnabled(false);
+  }
+  
+  
+  /**
+   * Enables all the buttons
+   * Called if the user wants to play again
+   */
+  public void enableButtons() {
+    for (int i = 0; i < BOARD_WIDTH; ++i) 
+      buttonPanels[i].setEnabled(true);
   }
   
   
@@ -180,5 +181,17 @@ public class Interface {
     if (player == 'X')
       piecePanels[idx][pos].setBackground(Color.BLUE);
     else piecePanels[idx][pos].setBackground(Color.RED);   
+  }
+  
+  
+  /**
+   * Resets the background of the board to white
+   * Called if the user wants to play again
+   */
+  public void clearBoard() {
+    for (int i = 0; i < BOARD_HEIGHT; ++i) {
+      for (int j = 0; j < BOARD_WIDTH; ++j) 
+        piecePanels[i][j].setBackground(Color.WHITE);
+    }
   }
 }

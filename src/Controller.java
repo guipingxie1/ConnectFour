@@ -1,12 +1,8 @@
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.JButton;
 import javax.swing.JOptionPane;
 
-/**
- * 
- */
 
 /**
  * @author guiping
@@ -26,9 +22,9 @@ public class Controller {
 
   
   /**
-   * @param args
+   * Constructor for the controller 
    */
-  public static void main(String[] args) {
+  public Controller() {
     window = new Interface();
     board = new Board();
     player = 'X';
@@ -49,21 +45,32 @@ public class Controller {
           int ret = board.placePiece(temp, player);     
           int idx = ret % 10;
           window.setPiecePanel(temp, idx, player);
-          
-          System.out.println(ret);
-          System.out.println(temp);
-          System.out.println(idx);
-          
+        
           if (idx == 0)
             window.disableButton(temp);
           
           /* Player won the game */
-          if (ret > 10) {
+          if (ret >= 10) {
             for (int j = 0; j < BOARD_WIDTH; ++j)
               window.disableButton(j);
             
-            JOptionPane.showMessageDialog(null, "Game Over", "Game Over", 
-                JOptionPane.INFORMATION_MESSAGE); 
+            int option;
+            
+            if (player == 'X') {
+              option = JOptionPane.showConfirmDialog(null, "Game Over, Blue wins. Play Again?", 
+                  null, JOptionPane.YES_NO_OPTION); 
+            }
+            else {
+              option = JOptionPane.showConfirmDialog(null, "Game Over, Red wins. Play Again?", 
+                  null, JOptionPane.YES_NO_OPTION);
+            }
+            
+            /* If the user wants to play again */
+            if (option == JOptionPane.YES_OPTION) {
+              board.clearBoard();
+              window.clearBoard();
+              window.enableButtons();
+            }
           }
           
           if (player == 'X') 

@@ -1,14 +1,16 @@
-/**
- * 
- */
-
 /* Shift + Alt + J to comment */
 
 /**
+ * Our board (model)
+ * 
  * @author guiping
  *
  */
 public class Board {
+  
+  /* Constants */
+  private static final int BOARD_HEIGHT = 6;
+  private static final int BOARD_WIDTH = 7;
   
   /* Board to hold the pieces, y-value then x-value */
   private char[][] board;
@@ -19,10 +21,10 @@ public class Board {
    * Initializes the board to all empty characters
    */
   public Board() {
-    board = new char[6][7];
+    board = new char[BOARD_HEIGHT][BOARD_WIDTH];
         
-    for (int i = 0; i < 6; ++i) {
-      for (int j = 0; j < 7; ++j)
+    for (int i = 0; i < BOARD_HEIGHT; ++i) {
+      for (int j = 0; j < BOARD_WIDTH; ++j)
         board[i][j] = ' ';
     }
   }
@@ -36,7 +38,7 @@ public class Board {
    * @return int: encodes the index of the piece and if the player won
    */
   public int placePiece(int pos, char player) {
-    int idx = 0;
+    int idx = -1;
     for (int i = 5; i >= 0; --i) {
       if (board[i][pos] == ' ') {
         idx = i;
@@ -50,6 +52,18 @@ public class Board {
       return 10 + idx;
     return idx;
   }
+  
+  
+  /**
+   * Clears the board (sets everything to the space character) 
+   * Called if the user wants to play again
+   */
+  public void clearBoard() {
+    for (int i = 0; i < BOARD_HEIGHT; ++i) {
+      for (int j = 0; j < BOARD_WIDTH; ++j)
+        board[i][j] = ' ';
+    }
+  }
 
   
   /**
@@ -62,21 +76,17 @@ public class Board {
    * @return boolean to indicate if the player won or not
    */
   private boolean checkWin(int pos, int idx, char player) {
-    if (checkHoriz(pos, idx, player)) {
+    if (checkHoriz(pos, idx, player)) 
       return true;
-    }
     
-    if (checkVert(pos, idx, player)) {
-      return true;
-    }
+    if (checkVert(pos, idx, player)) 
+      return true;    
     
-    if (checkDiagRight(pos, idx, player)) {
+    if (checkDiagRight(pos, idx, player)) 
       return true;
-    }
     
-    if (checkDiagLeft(pos, idx, player)) {
+    if (checkDiagLeft(pos, idx, player)) 
       return true;
-    }
     
     return false;
   }

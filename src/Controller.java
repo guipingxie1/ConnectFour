@@ -14,11 +14,11 @@ public class Controller {
   private static final int BOARD_WIDTH = 7;
   
   /* Required objects to run the game */
-  static Board board;
-  static Interface window;
+  Board board;
+  Interface window;
   
   /* Player one: 'X', alternates to 'Y' */
-  private static char player;
+  private char player;
 
   
   /**
@@ -36,13 +36,13 @@ public class Controller {
   /**
    * Helper to create the action listeners required for the buttons
    */
-  private static void addActionListeners() {
+  private void addActionListeners() {
     for (int i = 0; i < BOARD_WIDTH; ++i) {
       final int temp = i;
       window.addButtonActionListener(i, new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
-          int ret = board.placePiece(temp, player);     
+          String ret = board.placePiece(temp, player);     
           int idx = ret % 10;
           window.setPiecePanel(temp, idx, player);
         

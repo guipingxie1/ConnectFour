@@ -35,9 +35,9 @@ public class Board {
    * 
    * @param pos: The position the player wants to put their piece (0 - 6), x-value
    * @param player: The player, X or Y
-   * @return int: encodes the index of the piece and if the player won
+   * @return String: encodes the index of the piece and the coordinates if the player won
    */
-  public int placePiece(int pos, char player) {
+  public String placePiece(int pos, char player) {
     int idx = -1;
     for (int i = 5; i >= 0; --i) {
       if (board[i][pos] == ' ') {
@@ -47,10 +47,13 @@ public class Board {
       }  
     }
     
-    /* If the player wins we add 10 to the index of the piece */
-    if (checkWin(pos, idx, player))
-      return 10 + idx;
-    return idx;
+    /* If the player wins we return the coordinates of the piece */
+    String ret;
+    if ((ret = checkWin(pos, idx, player)) != "")
+      return ret;
+    
+    /* Else we return the index */
+    return Integer.toString(idx);
   }
   
   
@@ -73,22 +76,23 @@ public class Board {
    * @param pos: The position the player put their piece (0 - 6), x-value
    * @param idx: The index the player put their piece (0-5), y-value
    * @param player: The player, X or Y
-   * @return boolean to indicate if the player won or not
+   * @return String: The coordinates of the four pieces or 0 if the player does not win
    */
-  private boolean checkWin(int pos, int idx, char player) {
-    if (checkHoriz(pos, idx, player)) 
-      return true;
+  private String checkWin(int pos, int idx, char player) {
+    String ret = "";
+    if ((ret = checkHoriz(pos, idx, player)) != "") 
+      return ret;
     
-    if (checkVert(pos, idx, player)) 
-      return true;    
+    if ((ret = checkVert(pos, idx, player)) != "") 
+      return ret;    
     
-    if (checkDiagRight(pos, idx, player)) 
-      return true;
+    if ((ret = checkDiagRight(pos, idx, player)) != "") 
+      return ret;
     
-    if (checkDiagLeft(pos, idx, player)) 
-      return true;
+    if ((ret = checkDiagLeft(pos, idx, player)) != "") 
+      return ret;
     
-    return false;
+    return ret;
   }
   
   
@@ -100,9 +104,9 @@ public class Board {
    * @param pos: The position the player put their piece (0 - 6), x-value
    * @param idx: The index the player put their piece (0-5), y-value
    * @param player: The player, X or Y
-   * @return boolean to indicate if the player won or not
+   * @return String: The coordinates of the four pieces or 0 if the player does not win
    */
-  private boolean checkHoriz(int pos, int idx, char player) {
+  private String checkHoriz(int pos, int idx, char player) {
     /* Start index x-axis */
     int start = Math.max(0, pos - 3);
     
@@ -117,13 +121,19 @@ public class Board {
           ++count;
       }
       
-      if (count == 4)
-        return true;
+      if (count == 4) {
+        String ret = "";
+        for (int i = 0; i < 8; ++i) {
+          //ret += 
+        }
+        
+        return ret;
+      }
       
       ++start;
     }
     
-    return false;
+    return "";
   }
 
   
@@ -135,20 +145,22 @@ public class Board {
    * @param pos: The position the player put their piece (0 - 6), x-value
    * @param idx: The index the player put their piece (0-5), y-value
    * @param player: The player, X or Y
-   * @return boolean to indicate if the player won or not
+   * @return String: The coordinates of the four pieces or 0 if the player does not win
    */
-  private boolean checkVert(int pos, int idx, char player) {
+  private String checkVert(int pos, int idx, char player) {
     if (idx <= 2) {
       int start = idx + 3;
       for (int i = start; i >= idx; --i) {
         if (board[i][pos] != player)
-          return false;
+          return "";
       }
       
-      return true; 
+      String ret = "";
+      
+      return ret;
     }
     
-    return false;
+    return "";
   }
   
   
@@ -160,9 +172,9 @@ public class Board {
    * @param pos: The position the player put their piece (0 - 6), x-value
    * @param idx: The index the player put their piece (0-5), y-value
    * @param player: The player, X or Y
-   * @return boolean to indicate if the player won or not
+   * @return String: The coordinates of the four pieces or 0 if the player does not win
    */
-  private boolean checkDiagRight(int pos, int idx, char player) {
+  private String checkDiagRight(int pos, int idx, char player) {
     int diagSum = pos + idx;
     if ((diagSum > 2) && (diagSum < 9)) {
       int before = Math.min(3, Math.min(5 - idx, pos));
@@ -179,14 +191,15 @@ public class Board {
             ++count;
         }
         
-        if (count == 4)
-          return true;
+        if (count == 4) {
+          String ret = "";
+        }
         
         ++start;
       }
     }
     
-    return false;
+    return "";
   }
   
   
@@ -198,9 +211,9 @@ public class Board {
    * @param pos: The position the player put their piece (0 - 6), x-value
    * @param idx: The index the player put their piece (0-5), y-value
    * @param player: The player, X or Y
-   * @return boolean to indicate if the player won or not
+   * @return String: The coordinates of the four pieces or 0 if the player does not win
    */
-  private boolean checkDiagLeft(int pos, int idx, char player) {
+  private String checkDiagLeft(int pos, int idx, char player) {
     int diagSum = pos + 5 - idx;
     if ((diagSum > 2) && (diagSum < 9)) {
       int before = Math.min(3, Math.min(idx, pos));
@@ -217,13 +230,14 @@ public class Board {
             ++count;
         }
         
-        if (count == 4)
-          return true;
+        if (count == 4) {
+          String ret = "";
+        }          
         
         ++start;
       }
     }
     
-    return false; 
+    return ""; 
   }
 }

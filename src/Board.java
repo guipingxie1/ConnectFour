@@ -50,7 +50,7 @@ public class Board {
     /* If the player wins we return the coordinates of the piece */
     String ret;
     if ((ret = checkWin(pos, idx, player)) != "")
-      return ret;
+      return idx + ret;
     
     /* Else we return the index */
     return Integer.toString(idx);
@@ -123,8 +123,9 @@ public class Board {
       
       if (count == 4) {
         String ret = "";
-        for (int i = 0; i < 8; ++i) {
-          //ret += 
+        for (int i = 0; i < 4; ++i) {
+          ret += Integer.toString(idx);
+          ret += Integer.toString(i + start);
         }
         
         return ret;
@@ -156,6 +157,11 @@ public class Board {
       }
       
       String ret = "";
+      
+      for (int i = start; i >= idx; ++i) {
+      	ret += Integer.toString(i);
+      	ret += Integer.toString(pos);
+      }
       
       return ret;
     }
@@ -193,6 +199,15 @@ public class Board {
         
         if (count == 4) {
           String ret = "";
+          
+          for (int i = 0; i < 4; ++i) {
+		        if (board[idx + before - start - i][pos - before + start + i] == player) {
+		         	ret += Integer.toString(idx + before - start - i);
+		         	ret += Integer.toString(pos - before + start + i);
+	          }
+		      }
+		      
+		      return ret;
         }
         
         ++start;
@@ -232,6 +247,15 @@ public class Board {
         
         if (count == 4) {
           String ret = "";
+          
+          for (int i = 0; i < 4; ++i) {
+		        if (board[idx + before - start - i][pos - before + start + i] == player) {
+		         	ret += Integer.toString(idx - before + start + i);
+		         	ret += Integer.toString(pos - before + start + i);
+	          }
+		      }   
+		      
+		      return ret;       
         }          
         
         ++start;

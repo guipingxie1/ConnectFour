@@ -42,8 +42,9 @@ public class Controller {
       window.addButtonActionListener(i, new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
-          String ret = board.placePiece(temp, player);     
-          int idx = ret % 10;
+          String ret = board.placePiece(temp, player); 
+                   
+          int idx = Integer.parseInt(ret[0]);
           window.setPiecePanel(temp, idx, player);
         
           if (idx == 0)
@@ -51,8 +52,16 @@ public class Controller {
           
           /* Player won the game */
           if (ret >= 10) {
+          	/* Disable all the buttons */
             for (int j = 0; j < BOARD_WIDTH; ++j)
               window.disableButton(j);
+            
+            /* Highlight the winning pieces */
+            for (int j = 0; j < 4; ++j) {
+            	int x = Integer.parseInt(ret[2 * j + 1]);
+            	int y = Integer.parseInt(ret[2 * j + 2]);
+            	window.highlightPiece(x, y);
+            }
             
             int option;
             

@@ -96,7 +96,7 @@ public class Interface {
 
   
   /**
-   * Initialize the board
+   * Initialize the board and the pieces
    */
   private void initBoard() {
     board = new JPanel();
@@ -135,8 +135,7 @@ public class Interface {
       }
     }
   }
-  
-  
+   
  
   /**
    * Adds the action listener to the buttons
@@ -185,13 +184,27 @@ public class Interface {
   
   
   /**
+   * Highlights the position on the board
+   * Used to indicate the winning pieces
+   * 
+   * @param pos: The position the player put their piece (0 - 6), x-value
+   * @param idx: The index the player put their piece (0-5), y-value
+   */
+  public void highlightPiece(int pos, int idx) {
+  	boardPanels[pos][idx].setBorder(BorderFactory.createLineBorder(Color.YELLOW, GRID_WIDTH));
+  }
+  
+  
+  /**
    * Resets the background of the board to white
    * Called if the user wants to play again
    */
   public void clearBoard() {
     for (int i = 0; i < BOARD_HEIGHT; ++i) {
-      for (int j = 0; j < BOARD_WIDTH; ++j) 
+      for (int j = 0; j < BOARD_WIDTH; ++j) {
         piecePanels[i][j].setBackground(Color.WHITE);
+        boardPanels[i][j].setBorder(BorderFactory.createLineBorder(Color.BLACK, GRID_WIDTH));
+      }
     }
   }
 }

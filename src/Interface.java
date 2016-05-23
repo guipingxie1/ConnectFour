@@ -20,11 +20,13 @@ public class Interface {
 	private static final int SQUARE_SIZE = 100;
 	private static final int BUTTON_SIZE = 50;
 	private static final int PIECE_SIZE = 25;
-	private static final int OFFSET = 16;
+	private static final int OFFSET = 8;
+	private static final int UNDO_WIDTH = 120;
 
 	/* Interface Objects */
 	private JFrame frame;
 	private JPanel window;
+	private JPanel mainBoard;
 	private JPanel buttons;
 	private JPanel board;
 	private JPanel undo;
@@ -44,17 +46,18 @@ public class Interface {
 		frame = new JFrame("Connect Four");
 
 		/* Size includes the border so we have to account for it */
-		frame.setSize(BOARD_WIDTH * SQUARE_SIZE + 2 * BORDER_WIDTH + OFFSET + 100,
+		frame.setSize(
+		    BOARD_WIDTH * SQUARE_SIZE + 2 * BORDER_WIDTH + OFFSET + UNDO_WIDTH,
 				BOARD_HEIGHT * SQUARE_SIZE + 2 * BORDER_WIDTH + BUTTON_SIZE + OFFSET);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		initWindow();
-		initUndo();
 		initButtons();
 		initBoard();
+		initUndo();
+		initMainBoard();
 
-		window.add(buttons);
-		window.add(board);
+		window.add(mainBoard);
 		window.add(undo);
 
 		frame.setContentPane(window);
@@ -69,29 +72,49 @@ public class Interface {
 	private void initWindow() {
 		window = new JPanel();
 		window.setPreferredSize(
-		    new Dimension(BOARD_WIDTH * SQUARE_SIZE + 2 * BORDER_WIDTH + OFFSET + 100,
-				BOARD_HEIGHT * SQUARE_SIZE + 2 * BORDER_WIDTH + BUTTON_SIZE + OFFSET));
+		    new Dimension(
+		        BOARD_WIDTH * SQUARE_SIZE + 2 * BORDER_WIDTH + OFFSET + UNDO_WIDTH,
+		        BOARD_HEIGHT * SQUARE_SIZE + 2 * BORDER_WIDTH + BUTTON_SIZE + 3 * OFFSET));
 		window.setMinimumSize(
-		    new Dimension(BOARD_WIDTH * SQUARE_SIZE + 2 * BORDER_WIDTH + OFFSET + 100,
-				BOARD_HEIGHT * SQUARE_SIZE + 2 * BORDER_WIDTH + BUTTON_SIZE + OFFSET));
+		    new Dimension(
+		        BOARD_WIDTH * SQUARE_SIZE + 2 * BORDER_WIDTH + OFFSET +  + UNDO_WIDTH,
+		        BOARD_HEIGHT * SQUARE_SIZE + 2 * BORDER_WIDTH + BUTTON_SIZE + 3 * OFFSET));
 		window.setBackground(Color.WHITE);
 		window.setBorder(BorderFactory.createLineBorder(Color.BLACK, BORDER_WIDTH));
 	}
+	
+	
+	/**
+   * Frame for the main board
+   */
+  private void initMainBoard() {
+    mainBoard = new JPanel();
+    mainBoard.setPreferredSize(
+        new Dimension(BOARD_WIDTH * SQUARE_SIZE + 2 * BORDER_WIDTH,
+        BOARD_HEIGHT * SQUARE_SIZE + 2 * BORDER_WIDTH + BUTTON_SIZE + OFFSET));
+    mainBoard.setMinimumSize(
+        new Dimension(BOARD_WIDTH * SQUARE_SIZE + 2 * BORDER_WIDTH,
+        BOARD_HEIGHT * SQUARE_SIZE + 2 * BORDER_WIDTH + BUTTON_SIZE + OFFSET));
+    mainBoard.setBackground(Color.WHITE);
+    mainBoard.add(buttons);
+    mainBoard.add(board);
+  }
 
 	
 	/**
 	 * Initialize the undo button and panel
 	 */
 	private void initUndo() {
-	  undo = new JPanel();
-	  undo.setPreferredSize(new Dimension(100,
+	  undo = new JPanel(new GridBagLayout());
+	  undo.setPreferredSize(new Dimension( UNDO_WIDTH - OFFSET,
         BOARD_HEIGHT * SQUARE_SIZE + 2 * BORDER_WIDTH + BUTTON_SIZE + OFFSET));
-	  undo.setMinimumSize(new Dimension(100,
+	  undo.setMinimumSize(new Dimension( UNDO_WIDTH - OFFSET,
         BOARD_HEIGHT * SQUARE_SIZE + 2 * BORDER_WIDTH + BUTTON_SIZE + OFFSET));
 	  undo.setBackground(Color.WHITE);
-	  undo.setBorder(BorderFactory.createLineBorder(Color.BLACK, BORDER_WIDTH));
+	  //undo.setBorder(BorderFactory.createLineBorder(Color.BLACK, BORDER_WIDTH));
 	  
-	  undoButton = new JButton();
+	  undoButton = new JButton("Undo");
+	  disableUndoButton();
 	  undo.add(undoButton);
 	}
 	

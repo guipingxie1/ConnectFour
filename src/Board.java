@@ -1,3 +1,5 @@
+import java.awt.Color;
+
 /* Shift + Alt + J to comment */
 
 /**
@@ -17,8 +19,8 @@ public class Board {
 
 	
 	/**
-	 * Constructor for the Board class Initializes the board to all empty
-	 * characters
+	 * Constructor for the Board class 
+	 * Initializes the board to all empty characters
 	 */
 	public Board() {
 		board = new char[BOARD_HEIGHT][BOARD_WIDTH];
@@ -62,8 +64,8 @@ public class Board {
 
 	
 	/**
-	 * Clears the board (sets everything to the space character) Called if the
-	 * user wants to play again
+	 * Clears the board (sets everything to the space character) 
+	 * Called if the user wants to play again
 	 */
 	public void clearBoard() {
 		for (int i = 0; i < BOARD_HEIGHT; ++i) {
@@ -71,11 +73,25 @@ public class Board {
 				board[i][j] = ' ';
 		}
 	}
+	
+	
+	/**
+   * Called when a player undoes a move 
+   * Clears the piece at the provided coordinates
+   * 
+   * @param pos:
+   *            The position the player put their piece (0 - 6), x-value
+   * @param idx:
+   *            The index the player put their piece (0-5), y-value
+   */
+  public void undoMove(int pos, int idx) {
+    board[idx][pos] = ' ';
+  }
 
 	
 	/**
-	 * Function to check whether a player has won or not Position and player
-	 * passed in so we do not have to check everything
+	 * Function to check whether a player has won or not 
+	 * Position and player passed in so we do not have to check everything
 	 *
 	 * @param pos:
 	 *            The position the player put their piece (0 - 6), x-value
@@ -105,9 +121,9 @@ public class Board {
 
 	
 	/**
-	 * Function to check whether a player has won or not Position and player
-	 * passed in so we do not have to check everything Helper for checkWin,
-	 * checks the horizontal direction
+	 * Function to check whether a player has won or not 
+	 * Position and player passed in so we do not have to check everything 
+	 * Helper for checkWin, checks the horizontal direction
 	 *
 	 * @param pos:
 	 *            The position the player put their piece (0 - 6), x-value
@@ -151,9 +167,9 @@ public class Board {
 
 	
 	/**
-	 * Function to check whether a player has won or not Position and player
-	 * passed in so we do not have to check everything Helper for checkWin,
-	 * checks the vertical direction
+	 * Function to check whether a player has won or not 
+	 * Position and player passed in so we do not have to check everything 
+	 * Helper for checkWin, checks the vertical direction
 	 *
 	 * @param pos:
 	 *            The position the player put their piece (0 - 6), x-value
@@ -187,9 +203,9 @@ public class Board {
 
 	
 	/**
-	 * Function to check whether a player has won or not Position and player
-	 * passed in so we do not have to check everything Helper for checkWin,
-	 * checks the right diagonal direction: /
+	 * Function to check whether a player has won or not 
+	 * Position and player passed in so we do not have to check everything 
+	 * Helper for checkWin, checks the right diagonal direction: /
 	 *
 	 * @param pos:
 	 *            The position the player put their piece (0 - 6), x-value
@@ -237,9 +253,9 @@ public class Board {
 
 	
 	/**
-	 * Function to check whether a player has won or not Position and player
-	 * passed in so we do not have to check everything Helper for checkWin,
-	 * checks the left diagonal direction: \
+	 * Function to check whether a player has won or not 
+	 * Position and player passed in so we do not have to check everything 
+	 * Helper for checkWin, checks the left diagonal direction: \
 	 *
 	 * @param pos:
 	 *            The position the player put their piece (0 - 6), x-value

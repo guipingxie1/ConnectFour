@@ -27,11 +27,15 @@ public class Interface {
 	private JPanel window;
 	private JPanel buttons;
 	private JPanel board;
+	private JPanel undo;
 
 	private JButton[] buttonPanels;
 	private JPanel[][] boardPanels;
 	private JPanel[][] piecePanels;
 
+	/* Undo Button */
+	private JButton undoButton; 
+	
 	
 	/**
 	 * Create the application
@@ -40,16 +44,18 @@ public class Interface {
 		frame = new JFrame("Connect Four");
 
 		/* Size includes the border so we have to account for it */
-		frame.setSize(BOARD_WIDTH * SQUARE_SIZE + 2 * BORDER_WIDTH + OFFSET,
+		frame.setSize(BOARD_WIDTH * SQUARE_SIZE + 2 * BORDER_WIDTH + OFFSET + 100,
 				BOARD_HEIGHT * SQUARE_SIZE + 2 * BORDER_WIDTH + BUTTON_SIZE + OFFSET);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		initWindow();
+		initUndo();
 		initButtons();
 		initBoard();
 
 		window.add(buttons);
 		window.add(board);
+		window.add(undo);
 
 		frame.setContentPane(window);
 		frame.pack();
@@ -62,14 +68,33 @@ public class Interface {
 	 */
 	private void initWindow() {
 		window = new JPanel();
-		window.setPreferredSize(new Dimension(BOARD_WIDTH * SQUARE_SIZE + 2 * BORDER_WIDTH + OFFSET,
+		window.setPreferredSize(
+		    new Dimension(BOARD_WIDTH * SQUARE_SIZE + 2 * BORDER_WIDTH + OFFSET + 100,
 				BOARD_HEIGHT * SQUARE_SIZE + 2 * BORDER_WIDTH + BUTTON_SIZE + OFFSET));
-		window.setMinimumSize(new Dimension(BOARD_WIDTH * SQUARE_SIZE + 2 * BORDER_WIDTH + OFFSET,
+		window.setMinimumSize(
+		    new Dimension(BOARD_WIDTH * SQUARE_SIZE + 2 * BORDER_WIDTH + OFFSET + 100,
 				BOARD_HEIGHT * SQUARE_SIZE + 2 * BORDER_WIDTH + BUTTON_SIZE + OFFSET));
 		window.setBackground(Color.WHITE);
 		window.setBorder(BorderFactory.createLineBorder(Color.BLACK, BORDER_WIDTH));
 	}
 
+	
+	/**
+	 * Initialize the undo button and panel
+	 */
+	private void initUndo() {
+	  undo = new JPanel();
+	  undo.setPreferredSize(new Dimension(100,
+        BOARD_HEIGHT * SQUARE_SIZE + 2 * BORDER_WIDTH + BUTTON_SIZE + OFFSET));
+	  undo.setMinimumSize(new Dimension(100,
+        BOARD_HEIGHT * SQUARE_SIZE + 2 * BORDER_WIDTH + BUTTON_SIZE + OFFSET));
+	  undo.setBackground(Color.WHITE);
+	  undo.setBorder(BorderFactory.createLineBorder(Color.BLACK, BORDER_WIDTH));
+	  
+	  undoButton = new JButton();
+	  undo.add(undoButton);
+	}
+	
 	
 	/**
 	 * Initialize the buttons at the top for placing pieces
@@ -137,7 +162,7 @@ public class Interface {
 
 	
 	/**
-	 * Adds the action listener to the buttons
+	 * Adds the action listener to the place-piece buttons
 	 * 
 	 * @param pos:
 	 *            The position of the button (0-6)
@@ -147,6 +172,33 @@ public class Interface {
 	public void addButtonActionListener(int pos, ActionListener a) {
 		buttonPanels[pos].addActionListener(a);
 	}
+	
+	
+	/**
+   * Adds the action listener to the undo button
+   * 
+   * @param a:
+   *            The action listener
+   */
+  public void addUndoActionListener(ActionListener a) {
+    undoButton.addActionListener(a);
+  }
+  
+  
+  /**
+   * Enable the undo button
+   */
+  public void enableUndoButton() {
+    undoButton.setEnabled(true);
+  }
+  
+  
+  /**
+   * Disable the undo button
+   */
+  public void disableUndoButton() {
+    undoButton.setEnabled(false);
+  }
 
 	
 	/**
@@ -161,7 +213,8 @@ public class Interface {
 
 	
 	/**
-	 * Enables all the buttons Called if the user wants to play again
+	 * Enables all the buttons 
+	 * Called if the user wants to play again
 	 */
 	public void enableButtons() {
 		for (int i = 0; i < BOARD_WIDTH; ++i)
@@ -170,8 +223,8 @@ public class Interface {
 
 	
 	/**
-	 * Called when a player makes a move Changes the piecePanels array to the
-	 * corresponding players color
+	 * Called when a player makes a move 
+	 * Changes the piecePanels array to the corresponding players color
 	 * 
 	 * @param pos:
 	 *            The position the player put their piece (0 - 6), x-value
@@ -186,6 +239,20 @@ public class Interface {
 		else
 			piecePanels[idx][pos].setBackground(Color.RED);
 	}
+	
+	
+	/**
+   * Called when a player undoes a move 
+   * Changes the piecePanels array to white
+   * 
+   * @param pos:
+   *            The position the player put their piece (0 - 6), x-value
+   * @param idx:
+   *            The index the player put their piece (0-5), y-value
+   */
+  public void undoMove(int pos, int idx) {
+    piecePanels[idx][pos].setBackground(Color.WHITE);
+  }
 
 	
 	/**
@@ -199,11 +266,26 @@ public class Interface {
 	public void highlightPiece(int pos, int idx) {
 		boardPanels[pos][idx].setBorder(BorderFactory.createLineBorder(Color.YELLOW, GRID_WIDTH));
 	}
+	
+	
+	/**
+	 * Returns whether the game is tied or not
+	 * Done by checking if every button is disabled or not
+	 * 
+	 * @return boolean to indicate if the game is tied or not
+	 */
+	public boolean gameTied() {
+	  for (int i = 0; i < BOARD_WIDTH; ++i)
+	    if (buttonPanels[i].isEnabled())
+	      return false;
+	  
+	  return true;
+	}
 
 	
 	/**
-	 * Resets the background of the board to white Called if the user wants to
-	 * play again
+	 * Resets the background of the board to white 
+	 * Called if the user wants to play again
 	 */
 	public void clearBoard() {
 		for (int i = 0; i < BOARD_HEIGHT; ++i) {
@@ -213,4 +295,5 @@ public class Interface {
 			}
 		}
 	}
+	
 }

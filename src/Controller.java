@@ -20,6 +20,9 @@ public class Controller {
 	/* Player one: 'X', alternates to 'Y' */
 	private char player;
 	
+	/* Whether the player wants to play against AI */
+	private Boolean playAI;
+	
 	/* Used for undo, stores the previous position and index */
 	private Stack<Integer> allPositions;
 	private Stack<Integer> allIndices;
@@ -35,6 +38,7 @@ public class Controller {
 		allPositions = new Stack<Integer>();
     allIndices = new Stack<Integer>();
 		player = 'X';
+		playAI = false;
 	}
 	
 	
@@ -45,6 +49,8 @@ public class Controller {
 	public void runGame() {
 	  addActionListeners();
     addUndoAction();
+    addNewGameAction();
+    addAIAction();
 	}
 
 	
@@ -61,6 +67,9 @@ public class Controller {
 
 					int idx = Character.getNumericValue(ret.charAt(0));
 					window.setPiecePanel(temp, idx, player);
+					
+					/* Disable the AI button since a move was made */
+					window.disableAIButton();
 					
 					/* Only enable the undo button when necessary */
 					if (allPositions.empty())
@@ -118,6 +127,7 @@ public class Controller {
 							board.clearBoard();
 							window.clearBoard();
 							window.enableButtons();
+							clearStacks();
 						}
 					}
 
@@ -137,7 +147,7 @@ public class Controller {
 	private void addUndoAction() {
 	  window.addUndoActionListener(new ActionListener() {
       @Override
-      public void actionPerformed(ActionEvent arg0) {
+      public void actionPerformed(ActionEvent e) {
         int pos = allPositions.pop();
         int idx = allIndices.pop();
         
@@ -155,4 +165,52 @@ public class Controller {
       }	    
 	  });
 	}
+	
+	
+	/**
+   * Sets up the new game action listener
+   */
+  private void addNewGameAction() {
+    window.addNewGameActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        int option = JOptionPane.showConfirmDialog(null, 
+            "Starting New Game\nAre You Sure?", null, JOptionPane.YES_NO_OPTION);
+
+        /* If the user wants to start a new game */
+        if (option == JOptionPane.YES_OPTION) {
+          board.clearBoard();
+          window.clearBoard();
+          window.enableButtons();
+          clearStacks();
+          player = 'X';
+        }
+      }     
+    });
+  }
+  
+  
+  /**
+   * Sets up the AI action listener
+   */
+  private void addAIAction() {
+    window.addUndoActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        playAI = true;
+      }
+    });
+  }
+  
+  
+  /**
+   * Clears the position and index stacks
+   */
+  private void clearStacks() {
+    while(!allPositions.empty())
+      allPositions.pop();
+    
+    while (!allIndices.empty())
+      allIndices.pop();
+  }
 }

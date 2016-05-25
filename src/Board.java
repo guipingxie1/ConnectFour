@@ -1,5 +1,3 @@
-import java.awt.Color;
-
 /* Shift + Alt + J to comment */
 
 /**

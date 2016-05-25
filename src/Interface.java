@@ -17,11 +17,11 @@ public class Interface {
 	private static final int BOARD_WIDTH = 7;
 	private static final int BORDER_WIDTH = 3;
 	private static final int GRID_WIDTH = 1;
-	private static final int SQUARE_SIZE = 100;
-	private static final int BUTTON_SIZE = 50;
-	private static final int PIECE_SIZE = 25;
+	private static final int SQUARE_SIZE = 70;
+	private static final int BUTTON_SIZE = 30;
+	private static final int PIECE_SIZE = 15;
 	private static final int OFFSET = 8;
-	private static final int UNDO_WIDTH = 120;
+	private static final int SIDE_WIDTH = 150;
 
 	/* Interface Objects */
 	private JFrame frame;
@@ -29,14 +29,21 @@ public class Interface {
 	private JPanel mainBoard;
 	private JPanel buttons;
 	private JPanel board;
-	private JPanel undo;
+	private JPanel sideButtons;
 
 	private JButton[] buttonPanels;
+	private JPanel[] sideButtonPanels;
 	private JPanel[][] boardPanels;
 	private JPanel[][] piecePanels;
 
 	/* Undo Button */
 	private JButton undoButton; 
+	
+	/* Play against AI */
+	private JButton aiButton;
+	
+	/* New Game Button */
+	private JButton newGameButton;
 	
 	
 	/**
@@ -47,18 +54,18 @@ public class Interface {
 
 		/* Size includes the border so we have to account for it */
 		frame.setSize(
-		    BOARD_WIDTH * SQUARE_SIZE + 2 * BORDER_WIDTH + OFFSET + UNDO_WIDTH,
+		    BOARD_WIDTH * SQUARE_SIZE + 2 * BORDER_WIDTH + OFFSET + SIDE_WIDTH,
 				BOARD_HEIGHT * SQUARE_SIZE + 2 * BORDER_WIDTH + BUTTON_SIZE + OFFSET);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		initWindow();
 		initButtons();
 		initBoard();
-		initUndo();
+		initSideButtons();
 		initMainBoard();
 
 		window.add(mainBoard);
-		window.add(undo);
+		window.add(sideButtons);
 
 		frame.setContentPane(window);
 		frame.pack();
@@ -73,11 +80,11 @@ public class Interface {
 		window = new JPanel();
 		window.setPreferredSize(
 		    new Dimension(
-		        BOARD_WIDTH * SQUARE_SIZE + 2 * BORDER_WIDTH + OFFSET + UNDO_WIDTH,
+		        BOARD_WIDTH * SQUARE_SIZE + 2 * BORDER_WIDTH + OFFSET + SIDE_WIDTH,
 		        BOARD_HEIGHT * SQUARE_SIZE + 2 * BORDER_WIDTH + BUTTON_SIZE + 3 * OFFSET));
 		window.setMinimumSize(
 		    new Dimension(
-		        BOARD_WIDTH * SQUARE_SIZE + 2 * BORDER_WIDTH + OFFSET +  + UNDO_WIDTH,
+		        BOARD_WIDTH * SQUARE_SIZE + 2 * BORDER_WIDTH + OFFSET +  + SIDE_WIDTH,
 		        BOARD_HEIGHT * SQUARE_SIZE + 2 * BORDER_WIDTH + BUTTON_SIZE + 3 * OFFSET));
 		window.setBackground(Color.WHITE);
 		window.setBorder(BorderFactory.createLineBorder(Color.BLACK, BORDER_WIDTH));
@@ -104,18 +111,36 @@ public class Interface {
 	/**
 	 * Initialize the undo button and panel
 	 */
-	private void initUndo() {
-	  undo = new JPanel(new GridBagLayout());
-	  undo.setPreferredSize(new Dimension( UNDO_WIDTH - OFFSET,
-        BOARD_HEIGHT * SQUARE_SIZE + 2 * BORDER_WIDTH + BUTTON_SIZE + OFFSET));
-	  undo.setMinimumSize(new Dimension( UNDO_WIDTH - OFFSET,
-        BOARD_HEIGHT * SQUARE_SIZE + 2 * BORDER_WIDTH + BUTTON_SIZE + OFFSET));
-	  undo.setBackground(Color.WHITE);
-	  //undo.setBorder(BorderFactory.createLineBorder(Color.BLACK, BORDER_WIDTH));
+	private void initSideButtons() {
+	  sideButtons = new JPanel();
 	  
+	  sideButtons.setPreferredSize(new Dimension( SIDE_WIDTH - OFFSET,
+        BOARD_HEIGHT * SQUARE_SIZE + 2 * BORDER_WIDTH + BUTTON_SIZE + OFFSET));
+	  sideButtons.setMinimumSize(new Dimension( SIDE_WIDTH - OFFSET,
+        BOARD_HEIGHT * SQUARE_SIZE + 2 * BORDER_WIDTH + BUTTON_SIZE + OFFSET));
+	  sideButtons.setBackground(Color.WHITE);
+	  
+	  sideButtonPanels = new JPanel[2 * BOARD_HEIGHT];
+	  for (int i = 0; i < 2 * BOARD_HEIGHT; ++i) {
+	    sideButtonPanels[i] = new JPanel();
+	    sideButtonPanels[i].setPreferredSize(
+	        new Dimension(SIDE_WIDTH - OFFSET, SQUARE_SIZE / 2));
+	    sideButtonPanels[i].setMinimumSize(
+          new Dimension(SIDE_WIDTH - OFFSET, SQUARE_SIZE / 2));
+	    sideButtonPanels[i].setBackground(Color.WHITE);
+
+	    sideButtons.add(sideButtonPanels[i]);
+	  }
+	  
+	  /* All our side buttons */
+	  aiButton = new JButton("Play Against AI");
+    newGameButton = new JButton("New Game");
 	  undoButton = new JButton("Undo");
-	  disableUndoButton();
-	  undo.add(undoButton);
+	  disableUndoButton();	  
+	  
+	  sideButtonPanels[BOARD_HEIGHT - 2].add(newGameButton);
+	  sideButtonPanels[BOARD_HEIGHT - 1].add(undoButton);
+	  sideButtonPanels[BOARD_HEIGHT].add(aiButton);
 	}
 	
 	
@@ -209,6 +234,28 @@ public class Interface {
   
   
   /**
+   * Adds the action listener to the new game button
+   * 
+   * @param a:
+   *            The action listener
+   */
+  public void addNewGameActionListener(ActionListener a) {
+    newGameButton.addActionListener(a);
+  }
+  
+  
+  /**
+   * Adds the action listener to the AI button
+   * 
+   * @param a:
+   *            The action listener
+   */
+  public void addAIActionListener(ActionListener a) {
+    aiButton.addActionListener(a);
+  }
+  
+  
+  /**
    * Enable the undo button
    */
   public void enableUndoButton() {
@@ -221,6 +268,14 @@ public class Interface {
    */
   public void disableUndoButton() {
     undoButton.setEnabled(false);
+  }
+  
+  
+  /**
+   * Disable the undo button
+   */
+  public void disableAIButton() {
+    aiButton.setEnabled(false);
   }
 
 	
@@ -242,6 +297,8 @@ public class Interface {
 	public void enableButtons() {
 		for (int i = 0; i < BOARD_WIDTH; ++i)
 			buttonPanels[i].setEnabled(true);
+		
+		aiButton.setEnabled(true);
 	}
 
 	
@@ -287,7 +344,8 @@ public class Interface {
 	 *            The index the player put their piece (0-5), y-value
 	 */
 	public void highlightPiece(int pos, int idx) {
-		boardPanels[pos][idx].setBorder(BorderFactory.createLineBorder(Color.YELLOW, GRID_WIDTH));
+		boardPanels[pos][idx].setBorder(
+		    BorderFactory.createLineBorder(Color.GREEN, GRID_WIDTH));
 	}
 	
 	

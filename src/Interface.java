@@ -299,6 +299,7 @@ public class Interface {
 			buttonPanels[i].setEnabled(true);
 		
 		aiButton.setEnabled(true);
+		disableUndoButton();
 	}
 
 	
